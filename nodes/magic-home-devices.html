@@ -5,8 +5,13 @@
         <input type="text" id="node-config-input-name" placeholder="Name">
     </div>
     <div class="form-row">
-        <label for="node-config-input-ip"><i class="fa fa-map-marker"></i> IP</label>
-        <input type="text" id="node-config-input-ip" placeholder="Device IP">
+        <label for="node-config-input-deviceid"><i class="fa fa-map-marker"></i> ID</label>
+        <input type="text" id="node-config-input-deviceid" placeholder="Device ID">
+    </div>
+    <div class="form-row">
+       <button id="find">find device</button>
+       <select id="devices"></select>
+       <button id="setdevice">Set device ID</button>
     </div>
     <div class="form-row">
         <label for="node-config-input-connectiontimeout"><i class="fa fa-tachometer-alt"></i> Connection Timeout</label>
@@ -20,6 +25,7 @@
         <label for="node-config-input-applymasks"><i class="fa fa-mask"></i> Apply Masks</label>
         <input type="checkbox" value="false" id="node-config-input-applymasks" style="display: inline-block; width: auto; vertical-align: top;"/>
     </div>
+    
 </script>
 
 <script type='text/javascript'>
@@ -30,9 +36,13 @@
                     value: null,
                     required: false
                 },
-                ip: {
+                deviceid: {
                     value: null,
                     required: true
+                },
+                ip: {
+                    value: null,
+                    required: false
                 },
                 connectiontimeout: {
                     value: 10000,
@@ -48,7 +58,28 @@
                 }
           },
           label: function() {
-                return this.name || this.ip;
-          }
+                return this.name || this.id;
+          },
+	  oneditprepare: function() {
+	      $("#find").on("click", function() {
+		  let node = this;
+
+		  $.get('/magic-home/devices', function(devices) {
+                      for (const [key, device] of Object.entries(devices)) {
+			  $('#devices').append(new Option(
+                              device.id + ":" + device.address,
+                              device.id,
+                              false,
+                              device.id === node.deviceid
+			  ));
+                      }
+		  }).fail(function(jqXHR, textStatus, errorThrown) {
+		      RED.notify(textStatus, 'error');
+		  });
+	      });
+	      $("#setdevice").on("click", function() {
+		  $("#node-config-input-deviceid").val($("#devices").val());
+	      });
+	  }
     });
 </script>

@@ -1,14 +1,16 @@
-Node-RED nodes for integration MagicHome
+Node-RED nodes for integration MagicHome bulb
+I use HaoDeng WIFI SMART BULB RGBCW
+https://www.amazon.co.jp/gp/product/B07XSCY5GN
 
 Nodes:
 * on
-* pattern
-* rgbcw
+* rgb
+* cw
 * status
   
 Installation:
 ```
-npm install node-red-contrib-magic-home-local
+npm install node-red-contrib-magic-home-tos
 ``` 
 
 TODO:
